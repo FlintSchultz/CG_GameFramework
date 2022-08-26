@@ -7,7 +7,8 @@ int main()
 {
     // Window initialization. Inputs registration.
     DisplayWin32 displayWindowInstance;
-    displayWindowInstance.CreateDisplay();
+    InputDevice inputDevice = InputDevice(displayWindowInstance.getHWND());
+    displayWindowInstance.CreateDisplay(&inputDevice);
 
     // Создаем Device со SwapChain
 

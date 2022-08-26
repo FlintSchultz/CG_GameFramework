@@ -5,26 +5,26 @@
 
 class DisplayWin32 {
 
-private:
-	LPCWSTR applicationName;
-	HINSTANCE hInstance;
-	HWND hWnd;
-	WNDCLASSEX wc;
+	private:
+		LPCWSTR applicationName;
+		HINSTANCE hInstance;
+		HWND hWnd;
+		WNDCLASSEX wc;
 
-	int screenWidth;
-	int screenHeight;
-	int posX;
-	int posY;
+		int screenWidth;
+		int screenHeight;
+		int posX;
+		int posY;
 
-	long dwStyle;
+		long dwStyle;
 
-public:
-	HWND getHWND();
+	public:
+		HWND getHWND();
 
-	int getScreenWidth();
-	int getScreenHeight();
+		int getScreenWidth();
+		int getScreenHeight();
 
-	void CreateDisplay(InputDevice* iDev);
-	void ShowClientWindow(InputDevice* iDev);
-	void OnChangeScreenSize(const ScreenSize& args);
+		void CreateDisplay(InputDevice* iDev);
+		void ShowClientWindow(InputDevice* iDev);
+		void OnChangeScreenSize(const ScreenSize& args);
 };
