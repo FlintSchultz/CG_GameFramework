@@ -133,13 +133,14 @@
   <ItemGroup>
     <ClCompile Include="CGLab1.cpp" />
     <ClCompile Include="Delegates.cpp" />
-    <ClCompile Include="DisplayWin32.cpp" />
+    <ClCompile Include="DisplayWin.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameComponent.cpp" />
     <ClCompile Include="InputDevice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Delegates.h" />
-    <ClInclude Include="DisplayWin32.h" />
+    <ClInclude Include="DisplayWin.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameComponent.h" />
     <ClInclude Include="InputDevice.h" />

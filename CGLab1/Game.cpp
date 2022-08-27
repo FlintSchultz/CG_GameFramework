@@ -2,37 +2,6 @@
 #include "Game.h"
 
 Game::Game() {
-
-	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	D3D11_VIEWPORT viewport;
-	IDXGISwapChain* swapChain;
-	ID3D11RenderTargetView* rtv;
-	ID3D11Debug* debug;
-
-	std::chrono::time_point<std::chrono::steady_clock> prevTime;
-
-	float deltaTime;
-	float totalTime = 0;
-	unsigned int frameCount = 0;
-
-	ID3D11Texture2D* depthBuffer;
-	ID3D11DepthStencilView* depthView;
-
-	void Init();
-	int PrepareResources();
-	void DestroyResources();
-	void PrepareFrame();
-	void Draw();
-
-	float* BGcolor;
-
-	std::vector <GameComponent*> Components;
-
-	ID3D11DeviceContext* context;
-	DisplayWin32 display;
-	InputDevice inputDevice;
-
-
 	context = nullptr;
 	swapChain = nullptr;
 	rtv = nullptr;
@@ -43,7 +12,7 @@ Game::Game() {
 }
 
 void Game::Init() {
-	inputDevice = InputDevice(display.getHWND());
+	inputDevice.Init(display.getHWND());
 }
 
 void Game::Run() {
@@ -152,10 +121,9 @@ int Game::PrepareResources() {
 	res = device->CreateDepthStencilView(depthBuffer, &depthStenDesc, &depthView);
 
 
-	ID3D11Texture2D* backTex;
-	rtv;
-	res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTex);	// __uuidof(ID3D11Texture2D)
-	res = device->CreateRenderTargetView(backTex, nullptr, &rtv);
+	ID3D11Texture2D* backTexture;
+	res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTexture);	// __uuidof(ID3D11Texture2D)
+	res = device->CreateRenderTargetView(backTexture, nullptr, &rtv);
 
 	for (int i = 0; i < Components.size(); i++)
 	{

@@ -1,9 +1,15 @@
 #pragma once
 
+#include "export.h"
+
 #include <unordered_set>
 #include "Keys.h"
 #include "Delegates.h"
 
+struct ScreenSize {
+	int Width;
+	int Height;
+};
 
 struct MouseMoveEventArgs
 {
@@ -82,11 +88,6 @@ enum class MouseButtonFlags
 	None = 0,
 };
 
-struct ScreenSize {
-	int Width;
-	int Height;
-};
-
 class InputDevice
 {
 	private:
@@ -102,9 +103,9 @@ class InputDevice
 		std::unordered_set<Keys>* keys;
 
 		InputDevice();
-		InputDevice(HWND hWndArg);
 		~InputDevice();
 		
+		void Init(HWND hWndArg);
 		void OnKeyDown(KeyboardInputEventArgs args);
 		void OnMouseMove(RawMouseEventArgs args);
 		void OnChangeScreenSize(int width, int height);

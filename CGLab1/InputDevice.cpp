@@ -3,9 +3,17 @@
 
 using namespace DirectX::SimpleMath;
 
-InputDevice::InputDevice(HWND hWndArg)
-{
+InputDevice::InputDevice() {
 	keys = new std::unordered_set<Keys>();
+}
+
+InputDevice::~InputDevice()
+{
+	delete keys;
+}
+
+void InputDevice::Init(HWND hWndArg)
+{
 	hWnd = hWndArg;
 
 	RAWINPUTDEVICE Rid[2];
@@ -25,11 +33,6 @@ InputDevice::InputDevice(HWND hWndArg)
 		auto errorCode = GetLastError();
 		std::cout << "ERROR: " << errorCode << std::endl;
 	}
-}
-
-InputDevice::~InputDevice()
-{
-	delete keys;
 }
 
 void InputDevice::OnKeyDown(KeyboardInputEventArgs args)
@@ -83,7 +86,7 @@ void InputDevice::OnMouseMove(RawMouseEventArgs args)
 	GetCursorPos(&p);
 	ScreenToClient(hWnd, &p);
 
-	MouseEventArgs.Offset = Vector2(args.X, args.Y);
+	MouseEventArgs.Offset = Vector2(static_cast<float>(args.X), static_cast<float>(args.Y));
 	MouseEventArgs.Position = Vector2(p.x, p.y);
 	MouseEventArgs.WheelDelta = args.WheelDelta;
 
