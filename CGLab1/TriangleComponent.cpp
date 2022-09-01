@@ -10,23 +10,13 @@ TriangleComponent::TriangleComponent() {
 	compPosition = DirectX::SimpleMath::Vector3(0, 0, 0);
 
 	parent = nullptr;
-	isCatch = false;
-	localEuler = { 0.0f, 0.0f, 0.0f };
-	localScale = { 1.0f, 1.0f, 1.0f };
-	localPosition = { 1.0f, 1.0f, 1.0f };
-	offset = { 0.0f, 0.0f, 0.0f };
-
-	radius = 1.0f;
-
 	vertexBC = nullptr;
 	pixelBC = nullptr;
 	vertexShader = nullptr;
 	pixelShader = nullptr;
 	layout = nullptr;
 	vertexBuffer = nullptr;
-	lightBuffer = nullptr;
 	indexBuffer = nullptr;
-	constBuffer = nullptr;
 	rastState = nullptr;
 }
 
@@ -39,23 +29,13 @@ TriangleComponent::TriangleComponent(TriangleComponentParameters param) {
 	compPosition = param.compPosition;
 
 	parent = nullptr;
-	isCatch = false;
-	localEuler = { 0.0f, 0.0f, 0.0f };
-	localScale = { 1.0f, 1.0f, 1.0f };
-	localPosition = { 0.0f, 0.0f, 0.0f };
-	offset = { 0.0f, 0.0f, 0.0f };
-
-	radius = 1.0f;
-
 	vertexBC = nullptr;
 	pixelBC = nullptr;
 	vertexShader = nullptr;
 	pixelShader = nullptr;
 	layout = nullptr;
 	vertexBuffer = nullptr;
-	lightBuffer = nullptr;
 	indexBuffer = nullptr;
-	constBuffer = nullptr;
 	rastState = nullptr;
 }
 
@@ -211,14 +191,6 @@ void TriangleComponent::DestroyResources() {
 	
 	if (indexBuffer != nullptr) {
 		indexBuffer->Release();
-	}
-	
-	if (constBuffer != nullptr) {
-		constBuffer->Release();
-	}
-	
-	if (lightBuffer != nullptr) {
-		lightBuffer->Release();
 	}
 	
 	if (rastState != nullptr) {

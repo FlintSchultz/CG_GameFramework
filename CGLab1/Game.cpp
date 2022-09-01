@@ -6,10 +6,7 @@ Game::Game() {
 	context = nullptr;
 	swapChain = nullptr;
 	rtv = nullptr;
-	debug = nullptr;
 	BGcolor = new float[4] { 0.2f, 0.1f, 0.4f, 1.0f };
-	depthBuffer = nullptr;
-	depthView = nullptr;
 }
 
 void Game::Init() {
@@ -129,18 +126,6 @@ void Game::DestroyResources() {
 	
 	if (device != nullptr) {
 		device->Release();
-	}
-	
-	if (debug != nullptr) {
-		debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-	}
-	
-	if (depthBuffer) {
-		depthBuffer->Release();
-	}
-	
-	if (depthView != nullptr) {
-		depthView->Release();
 	}
 }
 

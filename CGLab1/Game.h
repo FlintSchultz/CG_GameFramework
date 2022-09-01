@@ -13,7 +13,6 @@ public:
 	D3D11_VIEWPORT viewport;
 	IDXGISwapChain* swapChain;
 	ID3D11RenderTargetView* rtv;
-	ID3D11Debug* debug;
 	TriangleComponent triangleComponent;
 	
 	std::chrono::time_point<std::chrono::steady_clock> prevTime;
@@ -21,9 +20,6 @@ public:
 	float deltaTime;
 	float totalTime = 0;
 	unsigned int frameCount = 0;
-	
-	ID3D11Texture2D* depthBuffer;
-	ID3D11DepthStencilView* depthView;
 
 	void Init();
 	int PrepareResources();
