@@ -1,52 +1,61 @@
 #include "export.h"
 #include "Game.h"
+#include "TriangleComponent.h"
 
 Game::Game() {
 	context = nullptr;
 	swapChain = nullptr;
 	rtv = nullptr;
 	debug = nullptr;
-	BGcolor = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
+	BGcolor = new float[4] { 0.2f, 0.1f, 0.4f, 1.0f };
 	depthBuffer = nullptr;
 	depthView = nullptr;
 }
 
 void Game::Init() {
 	inputDevice.Init(display.getHWND());
+
+	display.CreateDisplay(&inputDevice);
+
+	CreateTriangle();	
 }
 
 void Game::Run() {
 	Init();
 
-	display.CreateDisplay(&inputDevice);
-
 	int errors = PrepareResources();
 	MSG msg = {};
 	bool isExitRequested = false;
-
+	
 
 	while (!isExitRequested) {
 		// Handle the windows messages.
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
 			// If windows signals to end the application then exit out.
 			if (msg.message == WM_QUIT) {
 				isExitRequested = true;
 			}
 		}
-	
-		//swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
-		PrepareFrame();
+
+		context->ClearState();
+
+		viewport = {};
+		viewport.Width = static_cast<float>(display.getScreenWidth());
+		viewport.Height = static_cast<float>(display.getScreenHeight());
+		viewport.TopLeftX = 0;
+		viewport.TopLeftY = 0;
+		viewport.MinDepth = 0;
+		viewport.MaxDepth = 1.0f;
+
 		context->RSSetViewports(1, &viewport);
-		context->OMSetRenderTargets(1, &rtv, depthView);
 		
-		//context->OMSetRenderTargets(1, &rtv, nullptr);
-		
-		Update();
 		Draw();
-		
-		swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
+		PrepareFrame();
+
+		swapChain->Present(1, 0);
 	}
 
 	DestroyResources();
@@ -54,8 +63,8 @@ void Game::Run() {
 
 int Game::PrepareResources() {
 	D3D_FEATURE_LEVEL featureLevel[] = { D3D_FEATURE_LEVEL_11_1 };
+	
 	DXGI_SWAP_CHAIN_DESC swapDesc = {};
-
 	swapDesc.BufferCount = 2;
 	swapDesc.BufferDesc.Width = display.getScreenWidth();
 	swapDesc.BufferDesc.Height = display.getScreenHeight();
@@ -71,14 +80,6 @@ int Game::PrepareResources() {
 	swapDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	swapDesc.SampleDesc.Count = 1;
 	swapDesc.SampleDesc.Quality = 0;
-
-	viewport = {};
-	viewport.Width = static_cast<float>(display.getScreenWidth());
-	viewport.Height = static_cast<float>(display.getScreenHeight());
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.MinDepth = 0;
-	viewport.MaxDepth = 1.0f;
 
 	HRESULT res = D3D11CreateDeviceAndSwapChain(
 		nullptr,
@@ -100,27 +101,6 @@ int Game::PrepareResources() {
 		std::cout << "Error while create device and swap chain" << std::endl;
 	}
 
-	D3D11_TEXTURE2D_DESC depthTexDesc = {};
-	depthTexDesc.ArraySize = 1;
-	depthTexDesc.MipLevels = 1;
-	depthTexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-	depthTexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
-	depthTexDesc.CPUAccessFlags = 0;
-	depthTexDesc.MiscFlags = 0;
-	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthTexDesc.Width = display.getScreenWidth();
-	depthTexDesc.Height = display.getScreenHeight();
-	depthTexDesc.SampleDesc = { 1, 0 }; 
-	res = device->CreateTexture2D(&depthTexDesc, nullptr, &depthBuffer);
-
-
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStenDesc = {};
-	depthStenDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	depthStenDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStenDesc.Flags = 0;
-	res = device->CreateDepthStencilView(depthBuffer, &depthStenDesc, &depthView);
-
-
 	ID3D11Texture2D* backTexture;
 	res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTexture);	// __uuidof(ID3D11Texture2D)
 	res = device->CreateRenderTargetView(backTexture, nullptr, &rtv);
@@ -129,6 +109,7 @@ int Game::PrepareResources() {
 	{
 		Components[i]->Init(device, display, res);
 	}
+
 	return 0;
 }
 
@@ -164,9 +145,6 @@ void Game::DestroyResources() {
 }
 
 void Game::PrepareFrame() {
-	//std::chrono::time_point<std::chrono::steady_clock> PrevTime = std::chrono::steady_clock::now();
-	//float totalTime = 0;
-	//unsigned int frameCount = 0;
 	auto curTime = std::chrono::steady_clock::now();
 	deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(curTime - prevTime).count() / 1000000.0f;
 	prevTime = curTime;
@@ -181,9 +159,6 @@ void Game::PrepareFrame() {
 		SetWindowText(display.getHWND(), text);
 		frameCount = 0;
 	}
-
-	context->ClearState();
-	context->ClearDepthStencilView(depthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void Game::Update() {
@@ -191,8 +166,22 @@ void Game::Update() {
 }
 
 void Game::Draw() {
-	//TC.Draw(context);
-	context->ClearRenderTargetView(rtv, BGcolor);
 	for (int i = 0; i < Components.size(); i++)
-		Components[i]->Draw(context);
+		Components[i]->Draw(context, rtv, BGcolor);
+}
+
+void Game::CreateTriangle() {
+	TriangleComponentParameters rect;
+	rect.numPoints = 8;
+	rect.numIndeces = 6;
+	rect.points = new DirectX::XMFLOAT4[rect.numPoints] {
+		DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
+		DirectX::XMFLOAT4(-0.5f, -0.5f, 0.5f, 1.0f),DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT4(0.5f, -0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
+		DirectX::XMFLOAT4(-0.5f, 0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+	};
+
+	auto localTrianbleComponent = new TriangleComponent(rect);
+
+	Components.push_back(localTrianbleComponent);
 }

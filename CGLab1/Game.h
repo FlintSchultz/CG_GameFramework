@@ -3,6 +3,7 @@
 #include "export.h"
 #include "DisplayWin.h"
 #include "GameComponent.h"
+#include "TriangleComponent.h"
 
 class Game {
 public:
@@ -13,6 +14,7 @@ public:
 	IDXGISwapChain* swapChain;
 	ID3D11RenderTargetView* rtv;
 	ID3D11Debug* debug;
+	TriangleComponent triangleComponent;
 	
 	std::chrono::time_point<std::chrono::steady_clock> prevTime;
 	
@@ -42,5 +44,6 @@ public:
 	Game();
 	void Run();
 
-	void SetBackgroundColor(float* color) { BGcolor = color; };
+	void SetBackgroundColor(float* color) { BGcolor = color; }
+	void CreateTriangle();
 };

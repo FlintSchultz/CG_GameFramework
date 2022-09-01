@@ -137,6 +137,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameComponent.cpp" />
     <ClCompile Include="InputDevice.cpp" />
+    <ClCompile Include="TriangleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Delegates.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="export.h" />
+    <ClInclude Include="TriangleComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
