@@ -37,22 +37,22 @@ void InputDevice::Init(HWND hWndArg)
 
 void InputDevice::OnKeyDown(KeyboardInputEventArgs args)
 {
-	bool Break = args.Flags & 0x01;
+	bool Break = (args.Flags & 0x80) >> 7;
+	auto key = (Keys)args.VKey;
 
-	auto key = static_cast<Keys>(args.VKey);
+	if (args.MakeCode == 42)
+		key = Keys::LeftShift;
 
-	if (args.MakeCode == 42) key = Keys::LeftShift;
-	if (args.MakeCode == 54) key = Keys::RightShift;
+	if (args.MakeCode == 54)
+		key = Keys::RightShift;
 
-	if (Break) {
-		if (keys->count(key)) {
-			RemovePressedKey(key);
-		}
+	if (Break)
+	{
+		RemovePressedKey(key);
 	}
-	else {
-		if (!keys->count(key)) {
-			AddPressedKey(key);
-		}
+	else
+	{
+		AddPressedKey(key);
 	}
 }
 

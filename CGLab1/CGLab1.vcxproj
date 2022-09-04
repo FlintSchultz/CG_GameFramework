@@ -131,14 +131,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CGLab1.cpp" />
     <ClCompile Include="Delegates.cpp" />
     <ClCompile Include="DisplayWin.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameComponent.cpp" />
     <ClCompile Include="InputDevice.cpp" />
+    <ClCompile Include="Pong.cpp" />
+    <ClCompile Include="TriangleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Delegates.h" />
     <ClInclude Include="DisplayWin.h" />
     <ClInclude Include="Game.h" />
@@ -146,6 +150,8 @@
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="export.h" />
+    <ClInclude Include="Pong.h" />
+    <ClInclude Include="TriangleComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

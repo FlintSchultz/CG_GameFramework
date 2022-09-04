@@ -111,7 +111,7 @@ void DisplayWin::CreateDisplay(InputDevice* inputDevice) {
 		WS_EX_APPWINDOW,
 		applicationName,
 		applicationName,
-		WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX | WS_THICKFRAME,
+		dwStyle,
 		posX,
 		posY,
 		windowRect.right - windowRect.left,
@@ -130,6 +130,8 @@ void DisplayWin::ShowClientWindow(InputDevice* inputDevice) {
 	SetForegroundWindow(hWnd);
 	SetFocus(hWnd);
 	ShowCursor(true);
+
+	inputDevice->ChangeScreenSize.AddRaw(this, &DisplayWin::OnChangeScreenSize);
 }
 
 void DisplayWin::OnChangeScreenSize(const ScreenSize& arguments) {

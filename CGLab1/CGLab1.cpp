@@ -3,11 +3,15 @@
 #include "export.h"
 #include "DisplayWin.h"
 #include "Game.h"
+#include "Pong.h"
 
 int main()
 {
-    Game game;
-    game.Run();
+    // Game game;
+    // game.Run();
+
+    Pong pongInstance;
+    pongInstance.Run();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
