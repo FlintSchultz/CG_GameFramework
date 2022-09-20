@@ -6,22 +6,38 @@ Game::Game() {
 	context = nullptr;
 	swapChain = nullptr;
 	rtv = nullptr;
-	BGcolor = new float[4] { 0.2f, 0.1f, 0.4f, 1.0f };
+	debug = nullptr;
+	BGcolor = new float[4] { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	depthBuffer = nullptr;
+	depthView = nullptr;
 }
 
 void Game::Init() {
 	inputDevice.Init(display.getHWND());
 
 	display.CreateDisplay(&inputDevice);
+
+	PrepareResources();
+
+	auto cameraInstance = new Camera();
+	cameraInstance->Initialize(
+		DirectX::SimpleMath::Vector3(0.0f, 10.0f, 2.0f),
+		(1.57 / 2),
+		(1.57 / 2),
+		display.getScreenWidth(),
+		display.getScreenHeight(),
+		&inputDevice
+	);
+
+	camera.push_back(cameraInstance);
 }
 
 void Game::Run() {
 	Init();
 
-	int errors = PrepareResources();
-	MSG msg = {};
 	bool isExitRequested = false;
-
+	MSG msg = {};
 
 	while (!isExitRequested) {
 		// Handle the windows messages.
@@ -38,7 +54,7 @@ void Game::Run() {
 		PrepareFrame();
 
 		context->RSSetViewports(1, &viewport);
-		context->OMSetRenderTargets(1, &rtv, nullptr);
+		context->OMSetRenderTargets(1, &rtv, depthView);
 
 		Update();
 		Draw();
@@ -97,6 +113,26 @@ int Game::PrepareResources() {
 		std::cout << "Error while create device and swap chain" << std::endl;
 	}
 
+	D3D11_TEXTURE2D_DESC depthTexDesc = {};
+	depthTexDesc.ArraySize = 1; 
+	depthTexDesc.MipLevels = 1;
+	depthTexDesc.Format = DXGI_FORMAT_R32_TYPELESS; 
+	depthTexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
+	depthTexDesc.CPUAccessFlags = 0;
+	depthTexDesc.MiscFlags = 0;
+	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthTexDesc.Width = display.getScreenWidth();
+	depthTexDesc.Height = display.getScreenHeight();
+	depthTexDesc.SampleDesc = { 1, 0 };
+	res = device->CreateTexture2D(&depthTexDesc, nullptr, &depthBuffer);
+
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStenDesc = {};
+	depthStenDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStenDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStenDesc.Flags = 0;
+	res = device->CreateDepthStencilView(depthBuffer, &depthStenDesc, &depthView);
+
 	ID3D11Texture2D* backTexture;
 	res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTexture);	// __uuidof(ID3D11Texture2D)
 	res = device->CreateRenderTargetView(backTexture, nullptr, &rtv);
@@ -111,7 +147,7 @@ int Game::PrepareResources() {
 
 void Game::DestroyResources() {
 	for (int i = 0; i < Components.size(); i++) {
-		//Components[i]->DestroyResourses();
+		Components[i]->DestroyResourses();
 	}
 
 	if (context != nullptr) {
@@ -125,6 +161,18 @@ void Game::DestroyResources() {
 
 	if (device != nullptr) {
 		device->Release();
+	}
+
+	if (debug != nullptr) {
+		debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	}
+
+	if (depthBuffer) {
+		depthBuffer->Release();
+	}
+
+	if (depthView != nullptr) {
+		depthView->Release();
 	}
 }
 
@@ -145,19 +193,26 @@ void Game::PrepareFrame() {
 	}
 
 	context->ClearState();
+	context->ClearDepthStencilView(depthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void Game::Update() {
-	/*for (int i = 0; i < Components.size(); i++) {
-		Components[i]->Update(context);
-	}*/
+	camera.at(0)->Update(
+		deltaTime, 
+		display.getScreenWidth(), 
+		display.getScreenHeight()
+	);
+
+	for (int i = 0; i < Components.size(); i++) {
+		Components[i]->Update(context, camera.at(0));
+	}
 }
 
 void Game::Draw() {
 	context->ClearRenderTargetView(rtv, BGcolor);
 
 	for (int i = 0; i < Components.size(); i++) {
-		Components[i]->Draw(context, rtv, BGcolor);
+		Components[i]->Draw(context);
 	}
 }
 

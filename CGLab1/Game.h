@@ -4,6 +4,7 @@
 #include "DisplayWin.h"
 #include "GameComponent.h"
 #include "TriangleComponent.h"
+#include "Camera.h"
 
 class Game {
 public:
@@ -14,6 +15,9 @@ public:
 	IDXGISwapChain* swapChain;
 	ID3D11RenderTargetView* rtv;
 	TriangleComponent triangleComponent;
+	ID3D11Debug* debug;
+	ID3D11Texture2D* depthBuffer;
+	ID3D11DepthStencilView* depthView;
 
 	std::chrono::time_point<std::chrono::steady_clock> prevTime;
 
@@ -28,6 +32,8 @@ public:
 	void Draw();
 
 	float* BGcolor;
+
+	std::vector <Camera*> camera;
 
 public:
 	InputDevice inputDevice;

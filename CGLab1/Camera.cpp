@@ -1,8 +1,11 @@
 #include "export.h"
 #include "Camera.h"
 
+Camera::Camera() {
+}
+
 void Camera::Initialize(DirectX::SimpleMath::Vector3 pos, float yawVal, float pitchVal, int screenWidth, int screenHeight, InputDevice* inputeDeviceInstance) {
-	inputDevice = inputDevice;
+	inputDeviceCameraInstance = inputeDeviceInstance;
 	viewMatrix = DirectX::SimpleMath::Matrix::Identity;
 
 	projectionMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(
@@ -16,22 +19,26 @@ void Camera::Initialize(DirectX::SimpleMath::Vector3 pos, float yawVal, float pi
 	pitchAxis = pitchVal;
 	position = pos;
 	
-	if (inputDevice != nullptr) {
-		inputDevice->MouseMove.AddRaw(this, &Camera::OnMouseMove);
+	if (inputDeviceCameraInstance != nullptr) {
+		inputDeviceCameraInstance->MouseMove.AddRaw(this, &Camera::OnMouseMove);
 	}
 }
 
 void Camera::Update(float deltaTime, int screenWidth, int screenHeight) {
 	auto rotation = DirectX::SimpleMath::Matrix::CreateFromYawPitchRoll(yawAxis, pitchAxis, 0);
 	
-	if (inputDevice != nullptr) {
+	if (inputDeviceCameraInstance != nullptr) {
 		auto velDirection = DirectX::SimpleMath::Vector3::Zero;
-		if (inputDevice->IsKeyDown(Keys::W)) velDirection += DirectX::SimpleMath::Vector3(1.0f, 0.0f, 0.0f);
-		if (inputDevice->IsKeyDown(Keys::S)) velDirection += DirectX::SimpleMath::Vector3(-1.0f, 0.0f, 0.0f);
-		if (inputDevice->IsKeyDown(Keys::A)) velDirection += DirectX::SimpleMath::Vector3(0.0f, 0.0f, -1.0f);
-		if (inputDevice->IsKeyDown(Keys::D)) velDirection += DirectX::SimpleMath::Vector3(0.0f, 0.0f, 1.0f);
-		if (inputDevice->IsKeyDown(Keys::Space)) velDirection += DirectX::SimpleMath::Vector3(0.0f, 1.0f, 0.0f);
-		if (inputDevice->IsKeyDown(Keys::Q)) velDirection += DirectX::SimpleMath::Vector3(0.0f, -1.0f, 0.0f);
+
+		if (inputDeviceCameraInstance->IsKeyDown(Keys::W)) {
+			velDirection += DirectX::SimpleMath::Vector3(5.0f, 0.0f, 0.0f);
+		}
+		
+		if (inputDeviceCameraInstance->IsKeyDown(Keys::S)) velDirection += DirectX::SimpleMath::Vector3(-5.0f, 0.0f, 0.0f);
+		if (inputDeviceCameraInstance->IsKeyDown(Keys::A)) velDirection += DirectX::SimpleMath::Vector3(0.0f, 0.0f, -5.0f);
+		if (inputDeviceCameraInstance->IsKeyDown(Keys::D)) velDirection += DirectX::SimpleMath::Vector3(0.0f, 0.0f, 5.0f);
+		if (inputDeviceCameraInstance->IsKeyDown(Keys::Space)) velDirection += DirectX::SimpleMath::Vector3(0.0f, 5.0f, 0.0f);
+		if (inputDeviceCameraInstance->IsKeyDown(Keys::Q)) velDirection += DirectX::SimpleMath::Vector3(0.0f, -5.0f, 0.0f);
 
 		velDirection.Normalize();
 
@@ -44,21 +51,21 @@ void Camera::Update(float deltaTime, int screenWidth, int screenHeight) {
 	
 	viewMatrix = DirectX::SimpleMath::Matrix::CreateLookAt(position, position + rotation.Forward(), rotation.Up());
 	projectionMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(
-		(float) PI / 2.0f,
-		(float) screenWidth / screenHeight,
+		(float)PI / 2.0f,
+		(float)screenWidth / screenHeight,
 		0.1f,
 		100.0f
 	);
 }
 
 void Camera::OnMouseMove(const MouseMoveEventArgs& args) {
-	if (inputDevice == nullptr) {
+	if (inputDeviceCameraInstance == nullptr) {
 		return;
 	}
 		
-	if (inputDevice->IsKeyDown(Keys::LeftShift)) {
+	/*if (inputDevice->IsKeyDown(Keys::LeftShift)) {
 		return;
-	}
+	}*/
 
 	yawAxis -= args.Offset.x * 0.003f * mouseSensetivity;
 	pitchAxis -= args.Offset.y * 0.003f * mouseSensetivity;

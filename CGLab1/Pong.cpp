@@ -31,16 +31,16 @@ void Pong::PrintScore() {
 }
 
 void Pong::Reset() {
-	redLight = 15;
+	//redLight = 15;
 
-	ball->constData = { 0, 0 };
-	ball->setPosition(0.0, 0.0);
-	bar1->constData = { 0, 0 };
-	bar1->setPosition(0.7, 0.0);
-	bar2->constData = { 0, 0 };
-	bar2->setPosition(-0.7, 0.0);
-	ball->SetDirection();
-	ball->speed = 1.0f;
+	//ball->constData = { 0, 0 };
+	//ball->setPosition(0.0, 0.0);
+	//bar1->constData = { 0, 0 };
+	//bar1->setPosition(0.7, 0.0);
+	//bar2->constData = { 0, 0 };
+	//bar2->setPosition(-0.7, 0.0);
+	//ball->SetDirection();
+	//ball->speed = 1.0f;
 }
 
 void Pong::Run() {
@@ -59,7 +59,7 @@ void Pong::Update() {
 	}
 
 	for (int i = 0; i < Components.size(); i++) {
-		Components[i]->Update(Game::context);
+		// Components[i]->Update(Game::context);
 	}
 	
 	if (ball->x >= 1.0 - 0.05) {
@@ -103,8 +103,8 @@ Ball::Ball(Pong* game_, TriangleComponentParameters circle) : TriangleComponent(
 	y = 0.0f;
 }
 
-void Bar::Update(ID3D11DeviceContext* context) {
-	if (isLeft == true) {
+// void Bar::Update(ID3D11DeviceContext* context) {
+	/*if (isLeft == true) {
 		if (game->inputDevice.IsKeyDown(Keys::W)) {
 			std::cout << "WWW" << std::endl;
 
@@ -141,8 +141,8 @@ void Bar::Update(ID3D11DeviceContext* context) {
 	auto dataP = reinterpret_cast<float*>(res.pData);
 	memcpy(dataP, &constData, sizeof(ConstData));
 
-	context->Unmap(constBuffer, 0);
-}
+	context->Unmap(constBuffer, 0);*/
+// }
 
 void Ball::SetDirection() {
 	std::random_device rd;
@@ -156,8 +156,8 @@ void Ball::SetDirection() {
 	direction.z = 0;
 }
 
-void Ball::Update(ID3D11DeviceContext* context) {
-	x += direction.x * speed;
+// void Ball::Update(ID3D11DeviceContext* context) {
+	/*x += direction.x * speed;
 	y += direction.y * speed;
 
 	if (y >= 1.0f - radius)
@@ -181,8 +181,8 @@ void Ball::Update(ID3D11DeviceContext* context) {
 	auto dataP = reinterpret_cast<float*>(res.pData);
 	memcpy(dataP, &constData, sizeof(ConstData));
 
-	context->Unmap(constBuffer, 0);
-}
+	context->Unmap(constBuffer, 0);*/
+//}
 
 TriangleComponentParameters Pong::PrepareCircle(float xOff, float yOff) {
 	float radius = 0.05f;

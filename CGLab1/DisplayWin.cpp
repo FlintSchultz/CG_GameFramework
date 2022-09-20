@@ -131,7 +131,7 @@ void DisplayWin::ShowClientWindow(InputDevice* inputDevice) {
 	SetFocus(hWnd);
 	ShowCursor(true);
 
-	inputDevice->ChangeScreenSize.AddRaw(this, &DisplayWin::OnChangeScreenSize);
+	// inputDevice->ChangeScreenSize.AddRaw(this, &DisplayWin::OnChangeScreenSize);
 }
 
 void DisplayWin::OnChangeScreenSize(const ScreenSize& arguments) {

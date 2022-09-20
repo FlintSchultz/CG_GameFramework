@@ -7,7 +7,7 @@
 
 class Camera {
 	private:
-		InputDevice* inputDevice;
+		InputDevice* inputDeviceCameraInstance;
 
 	public:
 		DirectX::SimpleMath::Matrix viewMatrix;
@@ -16,8 +16,10 @@ class Camera {
 
 		float yawAxis;
 		float pitchAxis;
-		float velocityMagnitude = 5.0f;
-		float mouseSensetivity = 1.0f;
+		float velocityMagnitude = 2.0f;
+		float mouseSensetivity = 0.4f;
+
+		Camera();
 
 		void Initialize(DirectX::SimpleMath::Vector3 pos, float yawVal, float pitchVal, int screenWidth, int screenHeight, InputDevice* inputeDeviceInstance);
 		void Update(float deltaTime, int screenWidth, int screenHeight);

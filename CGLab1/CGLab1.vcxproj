@@ -139,6 +139,7 @@
     <ClCompile Include="GameComponent.cpp" />
     <ClCompile Include="InputDevice.cpp" />
     <ClCompile Include="Pong.cpp" />
+    <ClCompile Include="SolarSystemComponent.cpp" />
     <ClCompile Include="TriangleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="Keys.h" />
     <ClInclude Include="export.h" />
     <ClInclude Include="Pong.h" />
+    <ClInclude Include="SolarSystemComponent.h" />
     <ClInclude Include="TriangleComponent.h" />
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 
 #include "export.h"
 #include "DisplayWin.h"
+#include "Camera.h"
 
 using namespace DirectX;
 
@@ -11,7 +12,11 @@ class GameComponent {
 	
 		virtual void DestroyResourses() {};
 
-		virtual void Draw(ID3D11DeviceContext* context, ID3D11RenderTargetView* rtv, float* BGcolor) {};
+		virtual void Draw(ID3D11DeviceContext* context) {};
 
-		virtual void Update(ID3D11DeviceContext* context) {};
+		// virtual void Draw(ID3D11DeviceContext* context, ID3D11RenderTargetView* rtv, float* BGcolor) {};
+
+		// virtual void Update(ID3D11DeviceContext* context) {};
+
+		virtual void Update(ID3D11DeviceContext* context, Camera* camera) = 0;
 };

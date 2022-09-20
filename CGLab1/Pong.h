@@ -30,7 +30,7 @@ public:
 
 	void SetDirection();
 	
-	void Update(ID3D11DeviceContext* context) override;
+	// void Update(ID3D11DeviceContext* context) override;
 };
 
 class Bar : public TriangleComponent {
@@ -51,7 +51,7 @@ public:
 		yPos = y;
 	};
 
-	void Update(ID3D11DeviceContext* context) override;
+	// void Update(ID3D11DeviceContext* context) override;
 };
 
 class Pong : public Game {

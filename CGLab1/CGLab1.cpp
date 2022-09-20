@@ -4,14 +4,18 @@
 #include "DisplayWin.h"
 #include "Game.h"
 #include "Pong.h"
+#include "SolarSystemComponent.h"
 
 int main()
 {
     // Game game;
     // game.Run();
 
-    Pong pongInstance;
-    pongInstance.Run();
+    // Pong pongInstance;
+    // pongInstance.Run();
+
+    SolarSystemComponent solarSystemInstance;
+    solarSystemInstance.Run();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
