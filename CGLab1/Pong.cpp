@@ -36,9 +36,9 @@ void Pong::Reset() {
 	ball->constData = { 0, 0 };
 	ball->setPosition(0.0, 0.0);
 	bar1->constData = { 0, 0 };
-	bar1->setPosition(0.7, 0.0);
+	bar1->setPosition(0.5, 0.0);
 	bar2->constData = { 0, 0 };
-	bar2->setPosition(-0.7, 0.0);
+	bar2->setPosition(-0.5, 0.0);
 	ball->SetDirection();
 	ball->speed = 1.0f;
 }

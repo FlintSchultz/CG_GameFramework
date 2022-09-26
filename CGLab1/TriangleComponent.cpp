@@ -1,4 +1,4 @@
-#include "export.h"
+﻿#include "export.h"
 #include "TriangleComponent.h"
 
 TriangleComponent::TriangleComponent() {
@@ -94,7 +94,7 @@ int TriangleComponent::Init(Microsoft::WRL::ComPtr<ID3D11Device> device, Display
 	constData = { 0,0 };
 
 	D3D11_BUFFER_DESC constBufDesc = {};
-	constBufDesc.Usage = D3D11_USAGE_DYNAMIC;
+	constBufDesc.Usage = D3D11_USAGE_DYNAMIC; // Тип заполняемости буфера
 	constBufDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constBufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	constBufDesc.MiscFlags = 0;
@@ -255,7 +255,7 @@ void TriangleComponent::Update(ID3D11DeviceContext* context) {
 	D3D11_MAPPED_SUBRESOURCE res = {};
 	context->Map(constBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
 
-	auto dataP = reinterpret_cast<float*>(res.pData);
+	auto dataP = static_cast<float*>(res.pData);
 	memcpy(dataP, &constData, sizeof(ConstData));
 
 	context->Unmap(constBuffer, 0);
