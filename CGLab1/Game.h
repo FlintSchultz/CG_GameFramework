@@ -42,4 +42,5 @@ public:
 
 	void SetBackgroundColor(float* color) { BGcolor = color; }
 	void CreateTriangle();
+	void CreateCircle();
 };

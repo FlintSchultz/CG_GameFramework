@@ -2,6 +2,8 @@
 #include "Game.h"
 #include "TriangleComponent.h"
 
+#define PI 3.1415926535
+
 Game::Game() {
 	context = nullptr;
 	swapChain = nullptr;
@@ -14,7 +16,8 @@ void Game::Init() {
 
 	display.CreateDisplay(&inputDevice);
 
-	CreateTriangle();	
+	CreateTriangle();
+	// CreateCircle();
 }
 
 void Game::Run() {
@@ -157,16 +160,97 @@ void Game::Draw() {
 
 void Game::CreateTriangle() {
 	TriangleComponentParameters rect;
-	rect.numPoints = 8;
-	rect.numIndeces = 6;
+	rect.numPoints = 10;
+	rect.numIndeces = 9;
 	rect.points = new DirectX::XMFLOAT4[rect.numPoints] {
 		DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
 		DirectX::XMFLOAT4(-0.5f, -0.5f, 0.5f, 1.0f),DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
 		DirectX::XMFLOAT4(0.5f, -0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
 		DirectX::XMFLOAT4(-0.5f, 0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		DirectX::XMFLOAT4(0.8f, 0.8f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
 	};
 
-	auto localTrianbleComponent = new TriangleComponent(rect);
+	auto localTriangleComponent = new TriangleComponent(rect);
 
-	Components.push_back(localTrianbleComponent);
+	Components.push_back(localTriangleComponent);
 }
+
+void Game::CreateCircle() {
+	float radius = 0.55f;
+
+	TriangleComponentParameters circle;
+
+	circle.numPoints = 72;
+	circle.numIndeces = 36;
+
+	int i = 0;
+	float y = 0.0f;
+	float temp = 0.0f;
+
+	circle.points = new DirectX::XMFLOAT4[circle.numPoints * 2];
+	circle.indeces = new int[circle.numIndeces * 2];
+
+	for (int j = 0; j < circle.numIndeces; j++) {
+		circle.indeces[j] = j;
+	}
+
+	for (float x = -radius; x < radius - 0.000001; x = x + (radius / 6)) {
+		circle.points[i] = DirectX::XMFLOAT4(0.0f, 0.0f, 0.5f, 1.0f);
+		i++;
+	
+		circle.points[i] = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		i++;
+		
+		circle.points[i] = DirectX::XMFLOAT4(x, y, 0.5f, 1.0f);
+		i++;
+		
+		circle.points[i] = DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f);
+		i++;
+		
+		temp = x + (radius / 6);
+		y = sqrt(pow(radius, 2) - pow(temp, 2));
+		
+		circle.points[i] = DirectX::XMFLOAT4(temp, y, 0.5f, 1.0f);
+		i++;
+		
+		circle.points[i] = DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f);
+		i++;
+	}
+	
+	circle.numPoints = circle.numPoints * 2;
+	circle.numIndeces = circle.numIndeces * 2;
+	
+	y = 0.0f;
+	temp = 0.0f;
+	
+	for (int j = 24; j < circle.numIndeces; j++) {
+		circle.indeces[j] = j;
+	}
+
+	for (float x = -radius; x < radius - 0.000001; x = x + (radius / 6)) {
+		circle.points[i] = DirectX::XMFLOAT4(0, 0, 0.5f, 1.0f);
+		i++;
+
+		circle.points[i] = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		i++;
+
+		circle.points[i] = DirectX::XMFLOAT4(x + 0, -y + 0, 0.5f, 1.0f);
+		i++;
+
+		circle.points[i] = DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f);
+		i++;
+		
+		temp = x + (radius / 6);
+		y = sqrt(pow(radius, 2) - pow(temp, 2));
+		
+		circle.points[i] = DirectX::XMFLOAT4(temp + 0, -y + 0, 0.5f, 1.0f);
+		i++;
+		
+		circle.points[i] = DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f);
+		i++;
+	}
+
+	auto localCircleComponent = new TriangleComponent(circle);
+
+	Components.push_back(localCircleComponent);
+};

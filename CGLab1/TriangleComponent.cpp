@@ -71,7 +71,7 @@ int TriangleComponent::Init(Microsoft::WRL::ComPtr<ID3D11Device> device, Display
 		"TEST", 
 		"1", 
 		"TCOLOR", 
-		"float4(0.0f, 1.0f, 0.0f, 1.0f)", 
+		"float4(0.2f, 1.0f, 0.8f, 1.0f)", 
 		nullptr, 
 		nullptr
 	};
@@ -145,10 +145,6 @@ int TriangleComponent::Init(Microsoft::WRL::ComPtr<ID3D11Device> device, Display
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 	device->CreateBuffer(&vertexBufDesc, &vertexData, &vertexBuffer);
-	
-	int indeces[] = { 0,1,2, 1,0,3 };
-	parameters.indeces = indeces;
-	parameters.numIndeces = std::size(indeces);
 
 	D3D11_BUFFER_DESC indexBufDesc = {};
 	indexBufDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -157,9 +153,11 @@ int TriangleComponent::Init(Microsoft::WRL::ComPtr<ID3D11Device> device, Display
 	indexBufDesc.MiscFlags = 0;
 	indexBufDesc.StructureByteStride = 0;
 	indexBufDesc.ByteWidth = sizeof(int) * parameters.numIndeces;
+	
+	int indeces[] = { 0,1,2, 0,1,3, 2,3,4 };
 
 	D3D11_SUBRESOURCE_DATA indexData = {};
-	indexData.pSysMem = parameters.indeces;
+	indexData.pSysMem = indeces;
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 	device->CreateBuffer(&indexBufDesc, &indexData, &indexBuffer);
@@ -213,7 +211,7 @@ void TriangleComponent::Draw(ID3D11DeviceContext* context, ID3D11RenderTargetVie
 		context->ClearRenderTargetView(rtv, BGcolor);
 
 		context->DrawIndexed(
-			6,
+			parameters.numIndeces,
 			0,
 			0
 		);
