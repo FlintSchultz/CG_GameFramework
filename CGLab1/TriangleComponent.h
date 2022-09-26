@@ -38,7 +38,7 @@ public:
 	TriangleComponent();
 	TriangleComponent(TriangleComponentParameters param);
 
-	int Init(Microsoft::WRL::ComPtr<ID3D11Device> device, DisplayWin display, HRESULT result);
+	int Init(Microsoft::WRL::ComPtr<ID3D11Device> device, DisplayWin display);
 	void DestroyResources();
-	void Draw(ID3D11DeviceContext* context, ID3D11RenderTargetView* rtv, float* BGcolor);
+	void Draw(ID3D11DeviceContext* context);
 };

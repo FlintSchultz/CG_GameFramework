@@ -16,7 +16,6 @@ void Game::Init() {
 
 	display.CreateDisplay(&inputDevice);
 
-	CreateTriangle();
 	// CreateCircle();
 }
 
@@ -26,7 +25,13 @@ void Game::Run() {
 	int errors = PrepareResources();
 	MSG msg = {};
 	bool isExitRequested = false;
-	
+
+	CreateTriangle();
+
+	for (int i = 0; i < Components.size(); i++)
+	{
+		Components[i]->Init(device, display);
+	}
 
 	while (!isExitRequested) {
 		// Handle the windows messages.
@@ -40,20 +45,8 @@ void Game::Run() {
 			}
 		}
 
-		context->ClearState();
-
-		viewport = {};
-		viewport.Width = static_cast<float>(display.getScreenWidth());
-		viewport.Height = static_cast<float>(display.getScreenHeight());
-		viewport.TopLeftX = 0;
-		viewport.TopLeftY = 0;
-		viewport.MinDepth = 0;
-		viewport.MaxDepth = 1.0f;
-
-		context->RSSetViewports(1, &viewport);
-		
-		Draw();
 		PrepareFrame();
+		Draw();
 
 		swapChain->Present(1, 0);
 	}
@@ -105,9 +98,9 @@ int Game::PrepareResources() {
 	res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTexture);	// __uuidof(ID3D11Texture2D)
 	res = device->CreateRenderTargetView(backTexture, nullptr, &rtv);
 
-	for (int i = 0; i < Components.size(); i++)
+	if (FAILED(res))
 	{
-		Components[i]->Init(device, display, res);
+		std::cout << "Error while create render target view" << std::endl;
 	}
 
 	return 0;
@@ -147,6 +140,22 @@ void Game::PrepareFrame() {
 		SetWindowText(display.getHWND(), text);
 		frameCount = 0;
 	}
+
+	context->ClearState();
+	
+	context->OMSetRenderTargets(1, &rtv, nullptr);
+	context->ClearRenderTargetView(rtv, BGcolor);
+
+	viewport = {};
+	viewport.Width = static_cast<float>(display.getScreenWidth());
+	viewport.Height = static_cast<float>(display.getScreenHeight());
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0;
+	viewport.MaxDepth = 1.0f;
+
+	context->RSSetViewports(1, &viewport);
+
 }
 
 void Game::Update() {
@@ -155,7 +164,7 @@ void Game::Update() {
 
 void Game::Draw() {
 	for (int i = 0; i < Components.size(); i++)
-		Components[i]->Draw(context, rtv, BGcolor);
+		Components[i]->Draw(context);
 }
 
 void Game::CreateTriangle() {

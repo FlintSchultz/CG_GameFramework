@@ -39,9 +39,10 @@ TriangleComponent::TriangleComponent(TriangleComponentParameters param) {
 	rastState = nullptr;
 }
 
-int TriangleComponent::Init(Microsoft::WRL::ComPtr<ID3D11Device> device, DisplayWin display, HRESULT result) {
+int TriangleComponent::Init(Microsoft::WRL::ComPtr<ID3D11Device> device, DisplayWin display) {
 	ID3DBlob* errorVertexCode = nullptr;
-	result = D3DCompileFromFile(
+	
+	HRESULT result = D3DCompileFromFile(
 		L"../Shaders/FirstExampleShader.hlsl",
 		nullptr,
 		nullptr,
@@ -196,7 +197,7 @@ void TriangleComponent::DestroyResources() {
 	}
 }
 
-void TriangleComponent::Draw(ID3D11DeviceContext* context, ID3D11RenderTargetView* rtv, float* BGcolor) {
+void TriangleComponent::Draw(ID3D11DeviceContext* context) {
 	if (parameters.numIndeces != 0)
 	{
 		context->RSSetState(rastState);
@@ -206,9 +207,6 @@ void TriangleComponent::Draw(ID3D11DeviceContext* context, ID3D11RenderTargetVie
 		context->IASetVertexBuffers(0, 1, &vertexBuffer, strides, offsets);
 		context->VSSetShader(vertexShader, nullptr, 0);
 		context->PSSetShader(pixelShader, nullptr, 0);
-
-		context->OMSetRenderTargets(1, &rtv, nullptr);
-		context->ClearRenderTargetView(rtv, BGcolor);
 
 		context->DrawIndexed(
 			parameters.numIndeces,
