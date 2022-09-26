@@ -4,7 +4,14 @@
 Camera::Camera() {
 }
 
-void Camera::Initialize(DirectX::SimpleMath::Vector3 pos, float yawVal, float pitchVal, int screenWidth, int screenHeight, InputDevice* inputeDeviceInstance) {
+void Camera::Initialize(
+	DirectX::SimpleMath::Vector3 pos, 
+	float yawVal, 
+	float pitchVal, 
+	int screenWidth, 
+	int screenHeight, 
+	InputDevice* inputeDeviceInstance
+) {
 	inputDeviceCameraInstance = inputeDeviceInstance;
 	viewMatrix = DirectX::SimpleMath::Matrix::Identity;
 
@@ -62,10 +69,6 @@ void Camera::OnMouseMove(const MouseMoveEventArgs& args) {
 	if (inputDeviceCameraInstance == nullptr) {
 		return;
 	}
-		
-	/*if (inputDevice->IsKeyDown(Keys::LeftShift)) {
-		return;
-	}*/
 
 	yawAxis -= args.Offset.x * 0.003f * mouseSensetivity;
 	pitchAxis -= args.Offset.y * 0.003f * mouseSensetivity;

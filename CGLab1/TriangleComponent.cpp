@@ -319,8 +319,8 @@ void TriangleComponent::Update(ID3D11DeviceContext* context, Camera* camera) {
 	constData.worldViewProj = GetModelMatrix() * camera->viewMatrix * camera->projectionMatrix;
 	constData.worldViewProj = constData.worldViewProj.Transpose();
 	//constData.world = DirectX::SimpleMath::Matrix::CreateTranslation(parameters.compPosition);
-	constData.world = GetModelMatrix().Transpose();
-	constData.invertedWorldTransform = GetModelMatrix().Transpose().Invert().Transpose();
+	//constData.world = GetModelMatrix().Transpose();
+	//constData.invertedWorldTransform = GetModelMatrix().Transpose().Invert().Transpose();
 	
 	D3D11_MAPPED_SUBRESOURCE subresourse = {};
 	context->Map(

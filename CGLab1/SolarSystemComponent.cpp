@@ -57,26 +57,6 @@ void SolarSystemComponent::Init()
 	Earth->parent = SunComponent;
 	Earth->localPosition = { 30.0, 0.0, 0.0, 0.0 };
 	Components.push_back((Earth));
-
-	std::random_device rd;
-	std::mt19937 rng(rd());
-	std::uniform_int_distribution<int> uni(0, 10);
-
-
-	for (int angle = 5; angle < 360; angle += 5) {
-		float asteroidPos = uni(rng);
-		TriangleComponent* Asteroid = new TriangleComponent(CreateCube());
-		Asteroid->parent = SunComponent;
-		Asteroid->localScale = { 0.5, 0.5, 0.5, 1.0 };
-		Asteroid->localPosition = { 
-			static_cast<float>(cos(angle) * 70) + asteroidPos, 
-			0.0,
-			static_cast<float>(sin(angle)) * 70, 
-			0.0 
-		};
-		Asteroids.push_back(Asteroid);
-		Components.push_back(Asteroid);
-	}
 }
 
 void SolarSystemComponent::Run() 
@@ -99,27 +79,30 @@ void SolarSystemComponent::Update()
 
 	Mercury->localEuler = { 0, angleValue, 0 };
 	Mercury->localPosition = { 10 * static_cast<float>(cos(angleValue * 2 * 3.14 / 180)), 0, 10 * static_cast<float>(sin(angleValue * 2 * 3.14 / 180)) };
+
+	std::cout << cos(angleValue * 2 * 3.14 / 180) << std::endl;
+
+	float newScale = std::abs(cos(angleValue * 2 * 3.14 / 180) * 2);
+
+	Mercury->localScale = { newScale, newScale, newScale };
+
+	
 	Mercury->Update(Game::context, Game::camera.at(0));
 
-	Mars->localEuler = { 0, angleValue, 0 };
-	Mars->localPosition = { 40 * static_cast<float>(cos(angleValue * 0.5 * 3.14 / 180)), 0, 40 * static_cast<float>(sin(angleValue * 0.5 * 3.14 / 180)) };
-	Mars->Update(Game::context, Game::camera.at(0));
+	//Mars->localEuler = { 0, angleValue, 0 };
+	//Mars->localPosition = { 40 * static_cast<float>(cos(angleValue * 0.5 * 3.14 / 180)), 0, 40 * static_cast<float>(sin(angleValue * 0.5 * 3.14 / 180)) };
+	//Mars->Update(Game::context, Game::camera.at(0));
 
-	Venus->localPosition = { 20 * static_cast<float>(cos(angleValue * 1.5 * 3.14 / 180)), 0, 20 * static_cast<float>(sin(angleValue * 1.5 * 3.14 / 180)) };
-	Venus->localEuler = { 0, -angleValue * 2, 0 };
-	Venus->Update(Game::context, Game::camera.at(0));
+	//Venus->localPosition = { 20 * static_cast<float>(cos(angleValue * 1.5 * 3.14 / 180)), 0, 20 * static_cast<float>(sin(angleValue * 1.5 * 3.14 / 180)) };
+	//Venus->localEuler = { 0, -angleValue * 2, 0 };
+	//Venus->Update(Game::context, Game::camera.at(0));
 
-	Phobos->localEuler = { angleValue, angleValue, 0 };
-	Phobos->localPosition = { 5 * static_cast<float>(cos(angleValue * 4 * 3.14 / 180)), 0, 5 * static_cast<float>(sin(angleValue * 4 * 3.14 / 180)) };
-	Phobos->Update(Game::context, Game::camera.at(0));
+	//Phobos->localEuler = { angleValue, angleValue, 0 };
+	//Phobos->localPosition = { 5 * static_cast<float>(cos(angleValue * 4 * 3.14 / 180)), 0, 5 * static_cast<float>(sin(angleValue * 4 * 3.14 / 180)) };
+	//Phobos->Update(Game::context, Game::camera.at(0));
 
-	Earth->localEuler = { angleValue, angleValue, 0 };
-	Earth->Update(Game::context, Game::camera.at(0));
-
-	for (int i = 0; i < Asteroids.size(); i++) {
-		Asteroids[i]->localEuler = { angleValue, angleValue, 0 };
-		Asteroids[i]->Update(Game::context, Game::camera.at(0));
-	}
+	//Earth->localEuler = { angleValue, angleValue, 0 };
+	//Earth->Update(Game::context, Game::camera.at(0));
 }
 
 TriangleComponent SolarSystemComponent::CreateCube() {

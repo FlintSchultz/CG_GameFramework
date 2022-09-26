@@ -34,5 +34,4 @@ public:
 	TriangleComponent CreateCube();
 
 	std::vector <TriangleComponent*> PlanetComponents;
-	std::vector <TriangleComponent*> Asteroids;
 };

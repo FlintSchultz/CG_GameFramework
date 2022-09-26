@@ -82,7 +82,7 @@ void InputDevice::OnMouseMove(RawMouseEventArgs args)
 		RemovePressedKey(Keys::MiddleButton);
 	}
 	
-	POINT p;
+	/*POINT p;
 	GetCursorPos(&p);
 	ScreenToClient(hWnd, &p);
 
@@ -99,6 +99,20 @@ void InputDevice::OnMouseMove(RawMouseEventArgs args)
 		MouseEventArgs.WheelDelta
 	);
 
+	MouseMove.Broadcast(MouseEventArgs);*/
+
+	printf(
+		" Mouse: posX=%04.4f posY:%04.4f offsetX:%04.4f offsetY:%04.4f, wheelDelta=%04d \n",
+		MouseEventArgs.Position.x,
+		MouseEventArgs.Position.y,
+		MouseEventArgs.Offset.x,
+		MouseEventArgs.Offset.y,
+		MouseEventArgs.WheelDelta
+	);
+
+	MouseEventArgs.Offset = Vector2(Vector2(args.X, args.Y) - MouseEventArgs.Position);
+	MouseEventArgs.Position = Vector2(args.X, args.Y);
+	MouseEventArgs.WheelDelta = args.WheelDelta;
 	MouseMove.Broadcast(MouseEventArgs);
 }
 
